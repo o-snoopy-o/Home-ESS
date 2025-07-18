@@ -1,29 +1,19 @@
-from flask import Flask, request, jsonify
-import time
+from flask import Flask, send_from_directory, jsonify
+import os
+import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.')
 
-power_data = {
-    "solar": 0,
-    "battery": 0,
-    "load": 0,
-    "timestamp": time.time()
-}
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
 
-@app.route("/data.json", methods=["GET"])
-def get_data():
-    return jsonify(power_data)
+@app.route('/data.json')
+def data():
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+    return jsonify(data)
 
-@app.route("/update", methods=["POST"])
-def update_data():
-    global power_data
-    try:
-        new_data = request.get_json(force=True)
-        power_data = {**new_data, "timestamp": time.time()}
-        return jsonify({"status": "ok", "received": power_data})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-@app.route("/", methods=["GET"])
-def root():
-    return "✅ ESS Power Flow Server is running"
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # use 10000 by default or $PORT from environment
+    app.run(host='0.0.0.0', port=port)
