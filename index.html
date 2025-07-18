@@ -45,8 +45,8 @@
     #load_critical   { top: 15%; left: 76.5%; }
     #load_house      { top: 36%; left: 76.5%; }
     #load_workshop   { top: 57%; left: 76.5%; }
-    #grid_power      { top: 40%; left: 8%; }
-    #inverter1_power { top: 21%; left: 42.3%; }
+    #grid_power      { top: 36%; left: 16%; }
+    #inverter1_power { top: 36%; left: 44%; }
 
     .dots-container {
       position: absolute;
@@ -146,18 +146,18 @@
     <img src="https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png" class="underlay">
 
     <!-- Battery Boxes -->
-    <div class="box" id="battery_voltage">Voltage:</div>
-    <div class="box" id="battery_current">Current:</div>
+    <div class="box" id="battery_voltage">V:</div>
+    <div class="box" id="battery_current">C:</div>
     <div class="box" id="battery_power">0 W</div>
 
     <!-- AC Load Boxes -->
-    <div class="box" id="load_critical">Critical Load:</div>
-    <div class="box" id="load_house">House Load:</div>
-    <div class="box" id="load_workshop">Workshop Load:</div>
+    <div class="box" id="load_critical"></div>
+    <div class="box" id="load_house"></div>
+    <div class="box" id="load_workshop"></div>
 
     <!-- New Power Labels -->
-    <div class="box" id="grid_power">Grid:</div>
-    <div class="box" id="inverter1_power">Inverter 1:</div>
+    <div class="box" id="grid_power"></div>
+    <div class="box" id="inverter1_power"></div>
 
     <!-- Dots -->
     <div class="dots-container horizontal dots-grid"><div class="dot"></div><div class="dot"></div></div>
