@@ -36,7 +36,7 @@
 
   <script>
     async function fetchData() {
-      const apiUrl = "https://api.github.com/repos/o-snoopy-o/Home-ESS/contents/data.json";
+      const apiUrl = "https://api.github.com/repos/o-snoopy-o/Home-ESS/contents/data.json?timestamp=" + new Date().getTime();
 
       try {
         const res = await fetch(apiUrl);
