@@ -203,6 +203,13 @@
         toggleVisibility('dots-to-load-house', data.load_house !== 0);
         toggleVisibility('dots-to-load-workshop', data.load_workshop !== 0);
 
+        // Power Flow Visibility
+        toggleVisibility('dots-battery', data.battery_power !== 0 && data.battery_power !== null);
+        toggleVisibility('dots-grid', data.grid_power !== 0 && data.grid_power !== null);
+        toggleVisibility('dots-inverter1', data.inverter1_power !== 0 && data.inverter1_power !== null);
+        toggleVisibility('dots-inverter2', data.inverter2_power !== 0 && data.inverter2_power !== null);
+
+
       } catch (err) {
         document.getElementById("error").textContent = "❌ Failed to load data.";
         console.error("Fetch error:", err);
