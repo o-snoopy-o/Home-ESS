@@ -13,11 +13,28 @@ def root():
 
 @app.route("/data.json")
 def data():
+    default_data = {
+        "battery_voltage": 0.0,
+        "battery_current": 0.0,
+        "battery_power": 0.0,
+        "load_critical": 0.0,
+        "load_house": 0.0,
+        "load_workshop": 0.0,
+        "timestamp": None
+    }
+
     if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r") as f:
-            return jsonify(json.load(f))
+        try:
+            with open(DATA_FILE, "r") as f:
+                existing_data = json.load(f)
+            # Ensure all keys are present
+            for key in default_data:
+                existing_data.setdefault(key, default_data[key])
+            return jsonify(existing_data)
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
     else:
-        return jsonify({"solar": 0, "battery": 0, "load": 0, "timestamp": None})
+        return jsonify(default_data)
 
 @app.route("/update", methods=["POST"])
 def update_data():
