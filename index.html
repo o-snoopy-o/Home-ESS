@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <h1>Live Power Flow (Real-Time via GitHub API)</h1>
+  <h1>Live Power Flow</h1>
   <svg id="flowchart">
     <defs>
       <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
@@ -36,13 +36,9 @@
 
   <script>
     async function fetchData() {
-      const apiUrl = "https://api.github.com/repos/o-snoopy-o/Home-ESS/contents/data.json?timestamp=" + new Date().getTime();
-
       try {
-        const res = await fetch(apiUrl);
-        const json = await res.json();
-        const decoded = atob(json.content);
-        const data = JSON.parse(decoded);
+        const res = await fetch("/data.json?" + new Date().getTime());
+        const data = await res.json();
 
         document.getElementById("status").textContent =
           `Solar: ${data.solar} W | Battery: ${data.battery} W | Load: ${data.load} W`;
@@ -51,12 +47,11 @@
         document.getElementById("batteryToLoad").setAttribute("stroke", data.load > 0 ? "yellow" : "#555");
 
       } catch (e) {
-        console.error(e);
         document.getElementById("status").textContent = "❌ Failed to load data.";
       }
     }
 
-    setInterval(fetchData, 1000);  // update every 1 second(s)
+    setInterval(fetchData, 1000);
     fetchData();
   </script>
 </body>
