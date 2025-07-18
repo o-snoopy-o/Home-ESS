@@ -174,12 +174,12 @@
         document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
         document.getElementById("error").textContent = "";
 
-        // DIRECTION CONTROL
-
+        // Direction Control: Respect power flow
         toggleDirection('dots-battery', 'vertical', data.battery_power < 0);
         toggleDirection('dots-grid', 'horizontal', data.grid_power < 0);
-        toggleDirection('dots-inverter1', 'vertical', data.inverter1_power < 0);
-        toggleDirection('dots-inverter2', 'vertical', data.inverter2_power < 0);
+        toggleDirection('dots-inverter1', 'vertical', data.inverter1_power >= 0);
+        toggleDirection('dots-inverter2', 'vertical', data.inverter2_power >= 0);
+
 
         // LOAD VISIBILITY
         toggleVisibility('dots-to-load-critical', data.load_critical !== 0);
