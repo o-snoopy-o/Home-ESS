@@ -28,7 +28,7 @@
 
     .box {
       position: absolute;
-      padding: 10px 25px;
+      padding: 10px 30px;
       border: 2px solid red;
       background-color: rgba(255, 255, 255, 0.9);
       color: black;
@@ -39,20 +39,13 @@
       border-radius: 5px;
     }
 
-    #battery_voltage {
-      top: 67%;
-      left: 40%;
-    }
+    #battery_voltage { top: 67%; left: 40%; }
+    #battery_current { top: 73%; left: 40%; }
+    #battery_power   { top: 58%; left: 31%; }
 
-    #battery_current {
-      top: 73%;
-      left: 40%;
-    }
-
-    #battery_power {
-      top: 58%;
-      left: 31%;
-    }
+    #load_critical   { top: 30%; left: 85%; }
+    #load_house      { top: 40%; left: 85%; }
+    #load_workshop   { top: 50%; left: 85%; }
 
     .dots-container {
       position: absolute;
@@ -65,7 +58,7 @@
     .dot {
       width: 8px;
       height: 8px;
-      background-color: #4B0082; /* Deep purple */
+      background-color: #4B0082;
       border-radius: 50%;
       animation: move 1.5s linear infinite;
     }
@@ -78,23 +71,9 @@
       100% { transform: translateX(130px); opacity: 0; }
     }
 
-    .dots-grid {
-      top: 32%;
-      left: 17.5%;
-      width: 120px;
-    }
-
-    .dots-battery {
-      top: 58%;
-      left: 26.5%;
-      width: 120px;
-    }
-
-    .dots-load {
-      top: 34%;
-      left: 41%;
-      width: 120px;
-    }
+    .dots-grid    { top: 32%; left: 17.5%; width: 120px; }
+    .dots-battery { top: 58%; left: 26.5%; width: 120px; }
+    .dots-load    { top: 34%; left: 41%; width: 120px; }
 
     .error {
       color: red;
@@ -124,33 +103,28 @@
   <div class="container">
     <img src="https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png" class="underlay">
 
-    <!-- Boxes -->
+    <!-- Battery Boxes -->
     <div class="box" id="battery_voltage">Voltage:</div>
     <div class="box" id="battery_current">Current:</div>
     <div class="box" id="battery_power">0 W</div>
 
-    <!-- Dots: Grid to Victron -->
+    <!-- AC Load Boxes -->
+    <div class="box" id="load_critical">Critical Load:</div>
+    <div class="box" id="load_house">House Load:</div>
+    <div class="box" id="load_workshop">Workshop Load:</div>
+
+    <!-- Dots -->
     <div class="dots-container dots-grid">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
-
-    <!-- Dots: Victron to Battery -->
     <div class="dots-container dots-battery">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
-
-    <!-- Dots: Victron to Load -->
     <div class="dots-container dots-load">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
 
-    <!-- Status messages -->
+    <!-- Status -->
     <div class="values" id="liveValues"></div>
     <div class="error" id="error"></div>
   </div>
@@ -160,13 +134,17 @@
       try {
         const res = await fetch("/data.json");
         if (!res.ok) throw new Error("Failed to fetch data.");
-        
+
         const data = await res.json();
         console.log("Fetched data:", data);
 
         document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
         document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
         document.getElementById("battery_power").textContent = `${data.battery_power} W`;
+
+        document.getElementById("load_critical").textContent = `Critical Load:\n${data.load_critical} W`;
+        document.getElementById("load_house").textContent    = `House Load:\n${data.load_house} W`;
+        document.getElementById("load_workshop").textContent = `Workshop Load:\n${data.load_workshop} W`;
 
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
         document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
