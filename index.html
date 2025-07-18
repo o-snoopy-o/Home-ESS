@@ -28,13 +28,13 @@
 
     .box {
       position: absolute;
-      padding: 10px 30px;
-      border: 1px solid red;
+      padding: 10px 40px;
+      border: 0px solid red;
       background-color: rgba(255, 255, 255, 0.9);
       color: black;
       font-weight: bold;
-      text-align: center;
-      font-size: 14px;
+      text-align: left;
+      font-size: 16px;
       white-space: pre-line;
       border-radius: 5px;
     }
@@ -189,10 +189,10 @@
         const data = await res.json();
         console.log("Fetched data:", data);
 
-        document.getElementById("battery_voltage").textContent = `${data.battery_voltage} V`;
-        document.getElementById("battery_current").textContent = `${data.battery_current} A`;
-        document.getElementById("battery_charge").textContent = `${data.battery_charge} %`;
-        document.getElementById("battery_health").textContent = `${data.battery_health} %`;
+        document.getElementById("battery_voltage").textContent = `Voltage: ${data.battery_voltage} V`;
+        document.getElementById("battery_current").textContent = `Current: ${data.battery_current} A`;
+        document.getElementById("battery_charge").textContent = `Charge: ${data.battery_charge} %`;
+        document.getElementById("battery_health").textContent = `Health: ${data.battery_health} %`;
         document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
         document.getElementById("load_critical").textContent = `${data.load_critical} W`;
@@ -242,7 +242,7 @@
     }
 
     fetchData();
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 2000);
   </script>
 </body>
 </html>
