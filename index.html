@@ -185,16 +185,16 @@
         const data = await res.json();
         console.log("Fetched data:", data);
 
-        document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
-        document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
+        document.getElementById("battery_voltage").textContent = `V:\n${data.battery_voltage} V`;
+        document.getElementById("battery_current").textContent = `C:\n${data.battery_current} A`;
         document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
-        document.getElementById("load_critical").textContent = `Critical Load:\n${data.load_critical} W`;
-        document.getElementById("load_house").textContent = `House Load:\n${data.load_house} W`;
-        document.getElementById("load_workshop").textContent = `Workshop Load:\n${data.load_workshop} W`;
+        document.getElementById("load_critical").textContent = `\n${data.load_critical} W`;
+        document.getElementById("load_house").textContent = `\n${data.load_house} W`;
+        document.getElementById("load_workshop").textContent = `\n${data.load_workshop} W`;
 
-        document.getElementById("grid_power").textContent = `Grid:\n${data.grid_power} W`;
-        document.getElementById("inverter1_power").textContent = `Inverter 1:\n${data.inverter1_power} W`;
+        document.getElementById("grid_power").textContent = `\n${data.grid_power} W`;
+        document.getElementById("inverter1_power").textContent = `\n${data.inverter1_power} W`;
 
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
         document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
