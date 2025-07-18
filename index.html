@@ -4,36 +4,59 @@
   <meta charset="UTF-8">
   <title>Live Power Flow</title>
   <style>
-    body {
-      background-color: #111;
-      color: white;
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 40px;
+      overflow: hidden;
     }
 
-    h1 {
-      margin-bottom: 40px;
+    body {
+      background: url('https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png') no-repeat center center fixed;
+      background-size: contain;
+      position: relative;
+      color: white;
     }
 
     .box {
-      display: inline-block;
-      padding: 20px 30px;
-      border: 1px solid #777;
-      margin: 10px;
-      min-width: 100px;
+      position: absolute;
+      padding: 10px 16px;
+      border: 2px solid red;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: black;
+      font-weight: bold;
+      text-align: center;
+      font-size: 14px;
+      white-space: pre-line;
+      border-radius: 5px;
+    }
+
+    #solarBox {
+      top: 120px;
+      left: 590px;
+    }
+
+    #batteryBox {
+      top: 400px;
+      left: 350px;
+    }
+
+    #loadBox {
+      top: 220px;
+      right: 60px;
     }
 
     .arrow-container {
-      display: inline-block;
-      position: relative;
-      margin: 0 10px;
+      position: absolute;
+      height: 10px;
+      display: flex;
+      align-items: center;
     }
 
     .arrow {
-      display: inline-block;
       height: 10px;
-      width: 100px;
+      width: 150px;
       background-color: yellow;
       position: relative;
     }
@@ -52,10 +75,13 @@
 
     .dots {
       position: absolute;
-      top: -6px;
+      top: -4px;
       left: 0;
       display: flex;
-      gap: 6px;
+      gap: 20px;
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 10px;
     }
 
     .dot {
@@ -66,52 +92,100 @@
       animation: move 1.5s linear infinite;
     }
 
-    .dot:nth-child(2) { animation-delay: 0.3s; }
-    .dot:nth-child(3) { animation-delay: 0.6s; }
+    .dot:nth-child(2) { animation-delay: 0.4s; }
+    .dot:nth-child(3) { animation-delay: 0.8s; }
 
     @keyframes move {
       0% { transform: translateX(0); opacity: 1; }
-      100% { transform: translateX(90px); opacity: 0; }
+      100% { transform: translateX(130px); opacity: 0; }
+    }
+
+    /* Position arrows and dots */
+
+    .arrow-solar {
+      top: 160px;
+      left: 480px;
+    }
+
+    .arrow-battery {
+      top: 360px;
+      left: 330px;
+      transform: rotate(90deg);
+      transform-origin: left center;
+    }
+
+    .arrow-load {
+      top: 260px;
+      left: 700px;
     }
 
     .error {
       color: red;
-      margin-top: 30px;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
     }
 
     .values {
-      margin-top: 25px;
-      font-size: 1.2em;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 1em;
+      color: white;
+    }
+
+    h1 {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      margin: 0;
     }
   </style>
 </head>
 <body>
   <h1>Live Power Flow</h1>
-  <div class="flow">
-    <div class="box" id="solarBox">Solar</div>
-    <div class="arrow-container">
-      <div class="arrow"></div>
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
+
+  <!-- Boxes -->
+  <div class="box" id="solarBox">Solar</div>
+  <div class="box" id="batteryBox">Battery</div>
+  <div class="box" id="loadBox">Load</div>
+
+  <!-- Arrows -->
+  <div class="arrow-container arrow-solar">
+    <div class="arrow"></div>
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
-    <div class="box" id="batteryBox">Battery</div>
-    <div class="arrow-container">
-      <div class="arrow"></div>
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-    </div>
-    <div class="box" id="loadBox">Load</div>
   </div>
 
+  <div class="arrow-container arrow-battery">
+    <div class="arrow"></div>
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <div class="arrow-container arrow-load">
+    <div class="arrow"></div>
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Status messages -->
   <div class="values" id="liveValues"></div>
   <div class="error" id="error"></div>
 
+  <!-- Script -->
   <script>
     async function fetchData() {
       try {
