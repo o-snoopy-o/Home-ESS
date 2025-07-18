@@ -54,47 +54,18 @@
       left: 31%;
     }
 
-    .arrow-container {
+    .dots-container {
       position: absolute;
-      height: 10px;
-      display: flex;
-      align-items: center;
-    }
-
-    .arrow {
-      height: 10px;
-      width: 150px;
-      background-color: yellow;
-      position: relative;
-    }
-
-    .arrow::after {
-      content: '';
-      position: absolute;
-      right: -10px;
-      top: -6px;
-      width: 0;
-      height: 0;
-      border-left: 10px solid yellow;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-    }
-
-    .dots {
-      position: absolute;
-      top: -4px;
-      left: 0;
       display: flex;
       gap: 20px;
-      width: 100%;
-      justify-content: space-between;
       padding: 0 10px;
+      width: 100%;
     }
 
     .dot {
       width: 8px;
       height: 8px;
-      background-color: yellow;
+      background-color: #4B0082; /* Deep purple */
       border-radius: 50%;
       animation: move 1.5s linear infinite;
     }
@@ -107,21 +78,22 @@
       100% { transform: translateX(130px); opacity: 0; }
     }
 
-    .arrow-solar {
-      top: 21%;
-      left: 29.6%;
+    .dots-grid {
+      top: 32%;
+      left: 17.5%;
+      width: 120px;
     }
 
-    .arrow-battery {
-      top: 47.2%;
-      left: 20.3%;
-      transform: rotate(90deg);
-      transform-origin: left center;
+    .dots-battery {
+      top: 58%;
+      left: 26.5%;
+      width: 120px;
     }
 
-    .arrow-load {
+    .dots-load {
       top: 34%;
-      left: 43.1%;
+      left: 41%;
+      width: 120px;
     }
 
     .error {
@@ -157,32 +129,25 @@
     <div class="box" id="battery_current">Current:</div>
     <div class="box" id="battery_power">0 W</div>
 
-    <!-- Arrows -->
-    <div class="arrow-container arrow-solar">
-      <div class="arrow"></div>
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
+    <!-- Dots: Grid to Victron -->
+    <div class="dots-container dots-grid">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
 
-    <div class="arrow-container arrow-battery">
-      <div class="arrow"></div>
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
+    <!-- Dots: Victron to Battery -->
+    <div class="dots-container dots-battery">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
 
-    <div class="arrow-container arrow-load">
-      <div class="arrow"></div>
-      <div class="dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
+    <!-- Dots: Victron to Load -->
+    <div class="dots-container dots-load">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
     </div>
 
     <!-- Status messages -->
@@ -192,29 +157,28 @@
 
   <script>
     async function fetchData() {
-  try {
-    const res = await fetch("/data.json");
-    if (!res.ok) throw new Error("Failed to fetch data.");
-    
-    const data = await res.json();
-    console.log("Fetched data:", data);
+      try {
+        const res = await fetch("/data.json");
+        if (!res.ok) throw new Error("Failed to fetch data.");
+        
+        const data = await res.json();
+        console.log("Fetched data:", data);
 
-    document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
-    document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
-    document.getElementById("battery_power").textContent = `${data.battery_power} W`;
+        document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
+        document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
+        document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
-    const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
-    document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
-    document.getElementById("error").textContent = "";
-  } catch (err) {
-    document.getElementById("error").textContent = "❌ Failed to load data.";
-    console.error("Fetch error:", err);
-  }
-}
-
+        const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
+        document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
+        document.getElementById("error").textContent = "";
+      } catch (err) {
+        document.getElementById("error").textContent = "❌ Failed to load data.";
+        console.error("Fetch error:", err);
+      }
+    }
 
     fetchData();
-    setInterval(fetchData, 5000); // refresh every 5 sec
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>
