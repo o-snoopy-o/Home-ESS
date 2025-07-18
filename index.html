@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Power Flow</title>
+  <style>
+    body { font-family: sans-serif; background: #111; color: white; text-align: center; }
+    svg { width: 600px; height: 300px; margin-top: 2em; }
+    .block { fill: #444; stroke: #888; stroke-width: 2; }
+    .flow { stroke: yellow; stroke-width: 4; marker-end: url(#arrow); }
+    .label { fill: white; font-size: 14px; text-anchor: middle; }
+  </style>
+</head>
+<body>
+  <h1>Live Power Flow</h1>
+  <svg id="flowchart">
+    <defs>
+      <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto" markerUnits="strokeWidth">
+        <path d="M0,0 L10,5 L0,10 Z" fill="yellow"/>
+      </marker>
+    </defs>
+    <rect x="50" y="100" width="100" height="60" class="block"/>
+    <text x="100" y="135" class="label">Solar</text>
+
+    <rect x="250" y="100" width="100" height="60" class="block"/>
+    <text x="300" y="135" class="label">Battery</text>
+
+    <rect x="450" y="100" width="100" height="60" class="block"/>
+    <text x="500" y="135" class="label">Load</text>
+
+    <line id="solarToBattery" class="flow" x1="150" y1="130" x2="250" y2="130"/>
+    <line id="batteryToLoad" class="flow" x1="350" y1="130" x2="450" y2="130"/>
+  </svg>
+
+  <p id="status">Loading...</p>
+
+  <script>
+    async function fetchData() {
+      try {
+        const res = await fetch("data.json?" + new Date().getTime());
+        const data = await res.json();
+
+        document.getElementById("status").textContent = 
+          `Solar: ${data.solar} W | Battery: ${data.battery} W | Load: ${data.load} W`;
+
+        document.getElementById("solarToBattery").setAttribute("stroke", data.solar > 0 ? "yellow" : "#555");
+        document.getElementById("batteryToLoad").setAttribute("stroke", data.load > 0 ? "yellow" : "#555");
+
+      } catch (e) {
+        document.getElementById("status").textContent = "Error loading data.";
+      }
+    }
+
+    setInterval(fetchData, 3000);
+    fetchData();
+  </script>
+</body>
+</html>
