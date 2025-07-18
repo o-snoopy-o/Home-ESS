@@ -17,6 +17,9 @@ def data():
         "battery_voltage": 0.0,
         "battery_current": 0.0,
         "battery_power": 0.0,
+        "grid_power": 0.0,
+        "inverter1_power": 0.0,
+        "inverter2_power": 0.0,
         "load_critical": 0.0,
         "load_house": 0.0,
         "load_workshop": 0.0,
@@ -27,7 +30,6 @@ def data():
         try:
             with open(DATA_FILE, "r") as f:
                 existing_data = json.load(f)
-            # Ensure all keys are present
             for key in default_data:
                 existing_data.setdefault(key, default_data[key])
             return jsonify(existing_data)
