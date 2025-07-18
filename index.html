@@ -45,6 +45,8 @@
     #load_critical   { top: 15%; left: 76.5%; }
     #load_house      { top: 36%; left: 76.5%; }
     #load_workshop   { top: 57%; left: 76.5%; }
+    #grid_power      { top: 40%; left: 8%; }
+    #inverter1_power { top: 21%; left: 42.3%; }
 
     .dots-container {
       position: absolute;
@@ -81,7 +83,6 @@
     }
 
     .dot:nth-child(2) { animation-delay: 0.4s; }
-    .dot:nth-child(3) { animation-delay: 0.8s; }
 
     @keyframes move-horizontal {
       0% { transform: translateX(0); opacity: 1; }
@@ -154,6 +155,10 @@
     <div class="box" id="load_house">House Load:</div>
     <div class="box" id="load_workshop">Workshop Load:</div>
 
+    <!-- New Power Labels -->
+    <div class="box" id="grid_power">Grid:</div>
+    <div class="box" id="inverter1_power">Inverter 1:</div>
+
     <!-- Dots -->
     <div class="dots-container horizontal dots-grid"><div class="dot"></div><div class="dot"></div></div>
     <div class="dots-container vertical dots-battery"><div class="dot"></div><div class="dot"></div></div>
@@ -188,27 +193,26 @@
         document.getElementById("load_house").textContent = `House Load:\n${data.load_house} W`;
         document.getElementById("load_workshop").textContent = `Workshop Load:\n${data.load_workshop} W`;
 
+        document.getElementById("grid_power").textContent = `Grid:\n${data.grid_power} W`;
+        document.getElementById("inverter1_power").textContent = `Inverter 1:\n${data.inverter1_power} W`;
+
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
         document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
         document.getElementById("error").textContent = "";
 
-        // Direction Control: Respect power flow
         toggleDirection('dots-battery', 'vertical', data.battery_power < 0);
         toggleDirection('dots-grid', 'horizontal', data.grid_power < 0);
         toggleDirection('dots-inverter1', 'vertical', data.inverter1_power <= 0);
         toggleDirection('dots-inverter2', 'vertical', data.inverter2_power <= 0);
 
-        // Load Visibility
         toggleVisibility('dots-to-load-critical', data.load_critical !== 0);
         toggleVisibility('dots-to-load-house', data.load_house !== 0);
         toggleVisibility('dots-to-load-workshop', data.load_workshop !== 0);
 
-        // Power Flow Visibility
         toggleVisibility('dots-battery', data.battery_power !== 0 && data.battery_power !== null);
         toggleVisibility('dots-grid', data.grid_power !== 0 && data.grid_power !== null);
         toggleVisibility('dots-inverter1', data.inverter1_power !== 0 && data.inverter1_power !== null);
         toggleVisibility('dots-inverter2', data.inverter2_power !== 0 && data.inverter2_power !== null);
-
 
       } catch (err) {
         document.getElementById("error").textContent = "❌ Failed to load data.";
