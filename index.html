@@ -42,7 +42,6 @@
     #battery_voltage { top: 65%; left: 40%; }
     #battery_current { top: 70%; left: 40%; }
     #battery_power   { top: 57.5%; left: 31%; }
-
     #load_critical   { top: 20%; left: 76.5%; }
     #load_house      { top: 37%; left: 76.5%; }
     #load_workshop   { top: 55%; left: 76.5%; }
@@ -50,16 +49,13 @@
     .dots-container {
       position: absolute;
       display: flex;
-      gap: 20px;
+      gap: 30px;
     }
 
-    .horizontal {
-      flex-direction: row;
-    }
-
-    .vertical {
-      flex-direction: column;
-    }
+    .horizontal { flex-direction: row; }
+    .horizontal.reverse { flex-direction: row-reverse; }
+    .vertical { flex-direction: column; }
+    .vertical.reverse { flex-direction: column-reverse; }
 
     .dot {
       width: 20px;
@@ -81,20 +77,26 @@
 
     @keyframes move-horizontal {
       0% { transform: translateX(0); opacity: 1; }
-      100% { transform: translateX(120px); opacity: 0; }
+      100% { transform: translateX(50px); opacity: 0; }
     }
 
     @keyframes move-vertical {
       0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(120px); opacity: 0; }
+      100% { transform: translateY(30px); opacity: 0; }
     }
 
-    .dots-grid    { top: 37%; left: 12.5%; }
-    .dots-battery { top: 58%; left: 26.5%; }
-    .dots-load    { top: 37%; left: 41%; }
-    .dots-to-load-critical { top: 25%; left: 70%; }
-    .dots-to-load-house    { top: 42%; left: 70%; }
-    .dots-to-load-workshop { top: 59%; left: 70%; }
+    .dots-grid       { top: 40.5%; left: 14%; }
+    .dots-battery    { top: 52%; left: 29%; }
+    .dots-load-1     { top: 40.5%; left: 36%; }
+    .dots-load-2     { top: 40.5%; left: 50%; }
+    .dots-load-3     { top: 40.5%; left: 64%; }
+    .dots-to-load-critical { top: 19%; left: 76%; }
+    .dots-to-load-house    { top: 40.5%; left: 76%; }
+    .dots-to-load-workshop { top: 62%; left: 76%; }
+    .dots-inverter1  { top: 28%; left: 42.3%; }
+    .dots-inverter2  { top: 28%; left: 61.7%; }
+
+    .hidden { display: none !important; }
 
     .error {
       color: red;
@@ -134,25 +136,17 @@
     <div class="box" id="load_house">House Load:</div>
     <div class="box" id="load_workshop">Workshop Load:</div>
 
-    <!-- Dots (horizontal and vertical flow) -->
-    <div class="dots-container horizontal dots-grid">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="dots-container vertical dots-battery">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="dots-container horizontal dots-load">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="dots-container horizontal dots-to-load-critical">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="dots-container horiztonal dots-to-load-house">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
-    <div class="dots-container horizontal dots-to-load-workshop">
-      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-    </div>
+    <!-- Dots -->
+    <div class="dots-container horizontal dots-grid"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container vertical dots-battery"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-load-1"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-load-2"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-load-3"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-to-load-critical"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-to-load-house"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container horizontal dots-to-load-workshop"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container vertical dots-inverter1"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="dots-container vertical dots-inverter2"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
 
     <!-- Status -->
     <div class="values" id="liveValues"></div>
@@ -173,15 +167,43 @@
         document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
         document.getElementById("load_critical").textContent = `Critical Load:\n${data.load_critical} W`;
-        document.getElementById("load_house").textContent    = `House Load:\n${data.load_house} W`;
+        document.getElementById("load_house").textContent = `House Load:\n${data.load_house} W`;
         document.getElementById("load_workshop").textContent = `Workshop Load:\n${data.load_workshop} W`;
 
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
         document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
         document.getElementById("error").textContent = "";
+
+        // DIRECTION CONTROL
+
+        toggleDirection('dots-battery', 'vertical', data.battery_power < 0);
+        toggleDirection('dots-grid', 'horizontal', data.grid_power < 0);
+        toggleDirection('dots-inverter1', 'vertical', data.inverter1_power < 0);
+        toggleDirection('dots-inverter2', 'vertical', data.inverter2_power < 0);
+
+        // LOAD VISIBILITY
+        toggleVisibility('dots-to-load-critical', data.load_critical !== 0);
+        toggleVisibility('dots-to-load-house', data.load_house !== 0);
+        toggleVisibility('dots-to-load-workshop', data.load_workshop !== 0);
+
       } catch (err) {
         document.getElementById("error").textContent = "❌ Failed to load data.";
         console.error("Fetch error:", err);
+      }
+    }
+
+    function toggleDirection(className, baseDirection, reverse) {
+      const el = document.querySelector(`.${className}`);
+      el.classList.remove('reverse');
+      el.className = `dots-container ${baseDirection} ${className}`;
+      if (reverse) el.classList.add('reverse');
+    }
+
+    function toggleVisibility(className, show) {
+      const el = document.querySelector(`.${className}`);
+      if (el) {
+        if (show) el.classList.remove('hidden');
+        else el.classList.add('hidden');
       }
     }
 
