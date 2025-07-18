@@ -39,18 +39,17 @@
       border-radius: 5px;
     }
 
-    /* % positioning relative to image dimensions */
-    #solarBox {
+    #battery_voltage {
       top: 10.5%;
       left: 36.9%;
     }
 
-    #batteryBox {
+    #battery_current {
       top: 56%;
       left: 5.5%;
     }
 
-    #loadBox {
+    #battery_power {
       top: 17%;
       left: 92.4%;
     }
@@ -151,13 +150,12 @@
 <body>
   <h1>Live Power Flow</h1>
   <div class="container">
-    <!-- Image background -->
     <img src="https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png" class="underlay">
 
     <!-- Boxes -->
-    <div class="box" id="solarBox">Solar</div>
-    <div class="box" id="batteryBox">Battery</div>
-    <div class="box" id="loadBox">Load</div>
+    <div class="box" id="battery_voltage">Voltage:</div>
+    <div class="box" id="battery_current">Current:</div>
+    <div class="box" id="battery_power">0 W</div>
 
     <!-- Arrows -->
     <div class="arrow-container arrow-solar">
@@ -198,12 +196,15 @@
         const res = await fetch("/data.json");
         if (!res.ok) throw new Error("Failed to fetch data.");
         const data = await res.json();
-        document.getElementById("solarBox").textContent = `Solar\n${data.solar} W`;
-        document.getElementById("batteryBox").textContent = `Battery\n${data.battery} V`;
-        document.getElementById("loadBox").textContent = `Load\n${data.load} W`;
+
+        // Update content with corrected labels and units
+        document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
+        document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
+        document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
-        document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
+        document.getElementById("liveValues").textContent =
+          `Last updated: ${updated}`;
         document.getElementById("error").textContent = "";
       } catch (err) {
         document.getElementById("error").textContent = "❌ Failed to load data.";
@@ -211,7 +212,7 @@
     }
 
     fetchData();
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 5000); // refresh every 5 sec
   </script>
 </body>
 </html>
