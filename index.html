@@ -29,7 +29,7 @@
     .box {
       position: absolute;
       padding: 10px 30px;
-      border: 2px solid red;
+      border: 1px solid red;
       background-color: rgba(255, 255, 255, 0.9);
       color: black;
       font-weight: bold;
@@ -39,12 +39,12 @@
       border-radius: 5px;
     }
 
-    #battery_voltage { top: 65%; left: 40%; }
-    #battery_current { top: 70%; left: 40%; }
+    #battery_voltage { top: 64%; left: 40%; }
+    #battery_current { top: 69%; left: 40%; }
     #battery_power   { top: 57.5%; left: 31%; }
-    #load_critical   { top: 20%; left: 76.5%; }
-    #load_house      { top: 37%; left: 76.5%; }
-    #load_workshop   { top: 55%; left: 76.5%; }
+    #load_critical   { top: 15%; left: 76.5%; }
+    #load_house      { top: 36%; left: 76.5%; }
+    #load_workshop   { top: 57%; left: 76.5%; }
 
     .dots-container {
       position: absolute;
@@ -195,8 +195,8 @@
         // Direction Control: Respect power flow
         toggleDirection('dots-battery', 'vertical', data.battery_power < 0);
         toggleDirection('dots-grid', 'horizontal', data.grid_power < 0);
-        toggleDirection('dots-inverter1', 'vertical', data.inverter1_power >= 0);
-        toggleDirection('dots-inverter2', 'vertical', data.inverter2_power >= 0);
+        toggleDirection('dots-inverter1', 'vertical', data.inverter1_power <= 0);
+        toggleDirection('dots-inverter2', 'vertical', data.inverter2_power <= 0);
 
         // Load Visibility
         toggleVisibility('dots-to-load-critical', data.load_critical !== 0);
