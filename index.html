@@ -10,13 +10,20 @@
       height: 100%;
       font-family: Arial, sans-serif;
       overflow: hidden;
+      background: black;
     }
 
-    body {
-      background: url('https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png') no-repeat center center fixed;
-      background-size: contain;
+    .container {
       position: relative;
-      color: white;
+      width: 100%;
+      max-width: 1624px;
+      margin: auto;
+    }
+
+    .underlay {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     .box {
@@ -32,19 +39,20 @@
       border-radius: 5px;
     }
 
+    /* % positioning relative to image dimensions */
     #solarBox {
-      top: 120px;
-      left: 590px;
+      top: 10.5%;
+      left: 36.9%;
     }
 
     #batteryBox {
-      top: 400px;
-      left: 350px;
+      top: 56%;
+      left: 5.5%;
     }
 
     #loadBox {
-      top: 220px;
-      right: 60px;
+      top: 17%;
+      left: 92.4%;
     }
 
     .arrow-container {
@@ -100,23 +108,21 @@
       100% { transform: translateX(130px); opacity: 0; }
     }
 
-    /* Position arrows and dots */
-
     .arrow-solar {
-      top: 160px;
-      left: 480px;
+      top: 21%;
+      left: 29.6%;
     }
 
     .arrow-battery {
-      top: 360px;
-      left: 330px;
+      top: 47.2%;
+      left: 20.3%;
       transform: rotate(90deg);
       transform-origin: left center;
     }
 
     .arrow-load {
-      top: 260px;
-      left: 700px;
+      top: 34%;
+      left: 43.1%;
     }
 
     .error {
@@ -135,57 +141,57 @@
     }
 
     h1 {
-      position: absolute;
-      top: 10px;
-      width: 100%;
       text-align: center;
       color: white;
       font-size: 24px;
-      margin: 0;
+      margin: 10px auto;
     }
   </style>
 </head>
 <body>
   <h1>Live Power Flow</h1>
+  <div class="container">
+    <!-- Image background -->
+    <img src="https://raw.githubusercontent.com/o-snoopy-o/Home-ESS/main/Underlay.png" class="underlay">
 
-  <!-- Boxes -->
-  <div class="box" id="solarBox">Solar</div>
-  <div class="box" id="batteryBox">Battery</div>
-  <div class="box" id="loadBox">Load</div>
+    <!-- Boxes -->
+    <div class="box" id="solarBox">Solar</div>
+    <div class="box" id="batteryBox">Battery</div>
+    <div class="box" id="loadBox">Load</div>
 
-  <!-- Arrows -->
-  <div class="arrow-container arrow-solar">
-    <div class="arrow"></div>
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <!-- Arrows -->
+    <div class="arrow-container arrow-solar">
+      <div class="arrow"></div>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
     </div>
+
+    <div class="arrow-container arrow-battery">
+      <div class="arrow"></div>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="arrow-container arrow-load">
+      <div class="arrow"></div>
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- Status messages -->
+    <div class="values" id="liveValues"></div>
+    <div class="error" id="error"></div>
   </div>
 
-  <div class="arrow-container arrow-battery">
-    <div class="arrow"></div>
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-  </div>
-
-  <div class="arrow-container arrow-load">
-    <div class="arrow"></div>
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
-  </div>
-
-  <!-- Status messages -->
-  <div class="values" id="liveValues"></div>
-  <div class="error" id="error"></div>
-
-  <!-- Script -->
   <script>
     async function fetchData() {
       try {
@@ -197,8 +203,7 @@
         document.getElementById("loadBox").textContent = `Load\n${data.load} W`;
 
         const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
-        document.getElementById("liveValues").textContent =
-          `Last updated: ${updated}`;
+        document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
         document.getElementById("error").textContent = "";
       } catch (err) {
         document.getElementById("error").textContent = "❌ Failed to load data.";
@@ -206,7 +211,7 @@
     }
 
     fetchData();
-    setInterval(fetchData, 5000); // refresh every 5 sec
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>
