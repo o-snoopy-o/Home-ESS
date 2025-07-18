@@ -192,24 +192,26 @@
 
   <script>
     async function fetchData() {
-      try {
-        const res = await fetch("/data.json");
-        if (!res.ok) throw new Error("Failed to fetch data.");
-        const data = await res.json();
+  try {
+    const res = await fetch("/data.json");
+    if (!res.ok) throw new Error("Failed to fetch data.");
+    
+    const data = await res.json();
+    console.log("Fetched data:", data);
 
-        // Update content with corrected labels and units
-        document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
-        document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
-        document.getElementById("battery_power").textContent = `${data.battery_power} W`;
+    document.getElementById("battery_voltage").textContent = `Voltage:\n${data.battery_voltage} V`;
+    document.getElementById("battery_current").textContent = `Current:\n${data.battery_current} A`;
+    document.getElementById("battery_power").textContent = `${data.battery_power} W`;
 
-        const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
-        document.getElementById("liveValues").textContent =
-          `Last updated: ${updated}`;
-        document.getElementById("error").textContent = "";
-      } catch (err) {
-        document.getElementById("error").textContent = "❌ Failed to load data.";
-      }
-    }
+    const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
+    document.getElementById("liveValues").textContent = `Last updated: ${updated}`;
+    document.getElementById("error").textContent = "";
+  } catch (err) {
+    document.getElementById("error").textContent = "❌ Failed to load data.";
+    console.error("Fetch error:", err);
+  }
+}
+
 
     fetchData();
     setInterval(fetchData, 5000); // refresh every 5 sec
