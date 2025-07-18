@@ -51,8 +51,14 @@
       position: absolute;
       display: flex;
       gap: 20px;
-      padding: 0 10px;
-      width: 100%;
+    }
+
+    .horizontal {
+      flex-direction: row;
+    }
+
+    .vertical {
+      flex-direction: column;
     }
 
     .dot {
@@ -60,20 +66,35 @@
       height: 20px;
       background-color: #4B0082;
       border-radius: 50%;
-      animation: move 1.5s linear infinite;
+    }
+
+    .horizontal .dot {
+      animation: move-horizontal 1.5s linear infinite;
+    }
+
+    .vertical .dot {
+      animation: move-vertical 1.5s linear infinite;
     }
 
     .dot:nth-child(2) { animation-delay: 0.4s; }
     .dot:nth-child(3) { animation-delay: 0.8s; }
 
-    @keyframes move {
+    @keyframes move-horizontal {
       0% { transform: translateX(0); opacity: 1; }
-      100% { transform: translateX(500px); opacity: 0; }
+      100% { transform: translateX(120px); opacity: 0; }
     }
 
-    .dots-grid    { top: 37%; left: 12.5%; width: 300px; }
-    .dots-battery { top: 58%; left: 26.5%; width: 120px; }
-    .dots-load    { top: 37%; left: 41%; width: 800px; }
+    @keyframes move-vertical {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(120px); opacity: 0; }
+    }
+
+    .dots-grid    { top: 37%; left: 12.5%; }
+    .dots-battery { top: 58%; left: 26.5%; }
+    .dots-load    { top: 37%; left: 41%; }
+    .dots-to-load-critical { top: 25%; left: 70%; }
+    .dots-to-load-house    { top: 42%; left: 70%; }
+    .dots-to-load-workshop { top: 59%; left: 70%; }
 
     .error {
       color: red;
@@ -113,14 +134,23 @@
     <div class="box" id="load_house">House Load:</div>
     <div class="box" id="load_workshop">Workshop Load:</div>
 
-    <!-- Dots -->
-    <div class="dots-container dots-grid">
+    <!-- Dots (horizontal and vertical flow) -->
+    <div class="dots-container horizontal dots-grid">
       <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
-    <div class="dots-container dots-battery">
+    <div class="dots-container horizontal dots-battery">
       <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
-    <div class="dots-container dots-load">
+    <div class="dots-container horizontal dots-load">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="dots-container vertical dots-to-load-critical">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="dots-container vertical dots-to-load-house">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+    <div class="dots-container vertical dots-to-load-workshop">
       <div class="dot"></div><div class="dot"></div><div class="dot"></div>
     </div>
 
