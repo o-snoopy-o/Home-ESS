@@ -17,6 +17,8 @@ def data():
         "battery_voltage": 0.0,
         "battery_current": 0.0,
         "battery_power": 0.0,
+        "battery_charge": 0.0,
+        "battery_health": 0.0,
         "grid_power": 0.0,
         "inverter1_power": 0.0,
         "inverter2_power": 0.0,
