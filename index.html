@@ -6,129 +6,133 @@
   <style>
     body {
       background-color: #111;
-      color: #fff;
-      font-family: sans-serif;
+      color: white;
+      font-family: Arial, sans-serif;
       text-align: center;
-    }
-
-    h1 {
       margin-top: 40px;
     }
 
-    .flow-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 60px;
+    h1 {
+      margin-bottom: 40px;
     }
 
     .box {
-      background-color: #333;
-      border: 2px solid #888;
-      padding: 20px 40px;
-      margin: 0 20px;
+      display: inline-block;
+      padding: 20px 30px;
+      border: 1px solid #777;
+      margin: 10px;
+      min-width: 100px;
+    }
+
+    .arrow-container {
+      display: inline-block;
+      position: relative;
+      margin: 0 10px;
     }
 
     .arrow {
-      position: relative;
-      width: 100px;
+      display: inline-block;
       height: 10px;
-      background: yellow;
-      margin: 0 10px;
+      width: 100px;
+      background-color: yellow;
+      position: relative;
     }
 
     .arrow::after {
       content: '';
       position: absolute;
-      right: -20px;
-      top: -10px;
+      right: -10px;
+      top: -6px;
       width: 0;
       height: 0;
-      border-top: 15px solid transparent;
-      border-bottom: 15px solid transparent;
-      border-left: 20px solid yellow;
+      border-left: 10px solid yellow;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
     }
 
     .dots {
       position: absolute;
-      top: -10px;
+      top: -6px;
       left: 0;
       display: flex;
-      gap: 10px;
-      animation: moveDots 1s linear infinite;
+      gap: 6px;
     }
 
     .dot {
-      width: 10px;
-      height: 10px;
-      background-color: #ff0;
+      width: 8px;
+      height: 8px;
+      background-color: yellow;
       border-radius: 50%;
-      opacity: 0.7;
+      animation: move 1.5s linear infinite;
     }
 
-    @keyframes moveDots {
-      0% {
-        left: 0;
-      }
-      100% {
-        left: 90px;
-      }
-    }
+    .dot:nth-child(2) { animation-delay: 0.3s; }
+    .dot:nth-child(3) { animation-delay: 0.6s; }
 
-    .data {
-      margin-top: 60px;
-      font-size: 18px;
+    @keyframes move {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(90px); opacity: 0; }
     }
 
     .error {
       color: red;
       margin-top: 30px;
     }
+
+    .values {
+      margin-top: 25px;
+      font-size: 1.2em;
+    }
   </style>
 </head>
 <body>
   <h1>Live Power Flow</h1>
-  <div class="flow-container">
-    <div class="box">Solar</div>
-    <div class="arrow">
+  <div class="flow">
+    <div class="box" id="solarBox">Solar</div>
+    <div class="arrow-container">
+      <div class="arrow"></div>
       <div class="dots">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
     </div>
-    <div class="box">Battery</div>
-    <div class="arrow">
+    <div class="box" id="batteryBox">Battery</div>
+    <div class="arrow-container">
+      <div class="arrow"></div>
       <div class="dots">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
     </div>
-    <div class="box">Load</div>
+    <div class="box" id="loadBox">Load</div>
   </div>
 
-  <div class="data" id="powerData">Loading...</div>
-  <div class="error" id="errorMessage" style="display: none;">❌ Failed to load data.</div>
+  <div class="values" id="liveValues"></div>
+  <div class="error" id="error"></div>
 
   <script>
     async function fetchData() {
       try {
-        const response = await fetch('/data');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
+        const res = await fetch("/data.json");
+        if (!res.ok) throw new Error("Failed to fetch data.");
+        const data = await res.json();
+        document.getElementById("solarBox").textContent = `Solar\n${data.solar} W`;
+        document.getElementById("batteryBox").textContent = `Battery\n${data.battery} V`;
+        document.getElementById("loadBox").textContent = `Load\n${data.load} W`;
 
-        document.getElementById('powerData').textContent =
-          `Solar: ${data.solar} W | Battery: ${data.battery} W | Load: ${data.load} W`;
-        document.getElementById('errorMessage').style.display = 'none';
+        const updated = new Date(data.timestamp * 1000).toLocaleTimeString();
+        document.getElementById("liveValues").textContent =
+          `Last updated: ${updated}`;
+        document.getElementById("error").textContent = "";
       } catch (err) {
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('powerData').textContent = '';
+        document.getElementById("error").textContent = "❌ Failed to load data.";
       }
     }
 
-    setInterval(fetchData, 1000);
     fetchData();
+    setInterval(fetchData, 5000); // refresh every 5 sec
   </script>
 </body>
 </html>
