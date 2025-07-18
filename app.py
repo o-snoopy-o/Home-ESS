@@ -30,6 +30,7 @@ def data():
         try:
             with open(DATA_FILE, "r") as f:
                 existing_data = json.load(f)
+            # Ensure all required keys are present in case of older files
             for key in default_data:
                 existing_data.setdefault(key, default_data[key])
             return jsonify(existing_data)
