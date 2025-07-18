@@ -68,8 +68,16 @@
       animation: move-horizontal 1.5s linear infinite;
     }
 
+    .horizontal.reverse .dot {
+      animation-name: move-horizontal-reverse;
+    }
+
     .vertical .dot {
       animation: move-vertical 1.5s linear infinite;
+    }
+
+    .vertical.reverse .dot {
+      animation-name: move-vertical-reverse;
     }
 
     .dot:nth-child(2) { animation-delay: 0.4s; }
@@ -80,9 +88,19 @@
       100% { transform: translateX(50px); opacity: 0; }
     }
 
+    @keyframes move-horizontal-reverse {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(-50px); opacity: 0; }
+    }
+
     @keyframes move-vertical {
       0% { transform: translateY(0); opacity: 1; }
       100% { transform: translateY(30px); opacity: 0; }
+    }
+
+    @keyframes move-vertical-reverse {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-30px); opacity: 0; }
     }
 
     .dots-grid       { top: 40.5%; left: 14%; }
@@ -180,8 +198,7 @@
         toggleDirection('dots-inverter1', 'vertical', data.inverter1_power >= 0);
         toggleDirection('dots-inverter2', 'vertical', data.inverter2_power >= 0);
 
-
-        // LOAD VISIBILITY
+        // Load Visibility
         toggleVisibility('dots-to-load-critical', data.load_critical !== 0);
         toggleVisibility('dots-to-load-house', data.load_house !== 0);
         toggleVisibility('dots-to-load-workshop', data.load_workshop !== 0);
